@@ -9,6 +9,7 @@
 </p>
 <!-- splarg-storefront:end -->
 
+
 **Official Discordian Ordination Terminal v23.5**
 
 POPE.EXE is a small interactive browser toy inspired by Discordianism. On arrival you are immediately ordained and given an appropriately improbable papal identity; from there the terminal generates doctrines, missions, schisms and other bureaucratic acts of sacred nonsense.
