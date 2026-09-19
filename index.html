@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>POPE.EXE — Official Discordian Ordination Terminal v. 23.5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&amp;display=swap');
+        
+        body {
+            font-family: 'VT323', monospace;
+            background: #111;
+            color: #0f0;
+            image-rendering: pixelated;
+        }
+        
+        .terminal {
+            background: #001100;
+            border: 8px solid #0f0;
+            box-shadow: 0 0 30px #0f0;
+            max-height: 95vh;           /* ← NEW: never taller than screen */
+            overflow-y: auto;           /* ← NEW: whole thing scrolls now */
+            scrollbar-width: thin;
+            scrollbar-color: #0f0 #001100;
+        }
+        
+        .stamp {
+            position: absolute;
+            font-size: 1.8rem;
+            color: #f00;
+            transform: rotate(-15deg);
+            opacity: 0.15;
+            pointer-events: none;
+            text-shadow: 0 0 10px #f00;
+            animation: stamp-wiggle 4s infinite;
+        }
+        
+        @keyframes stamp-wiggle {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(-25deg); }
+        }
+        
+        .apple {
+            position: fixed;            /* changed to fixed so apples float over scroll */
+            font-size: 2.8rem;
+            cursor: pointer;
+            animation: float 3s infinite ease-in-out;
+            z-index: 50;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .chaos {
+            animation: chaos-glitch 0.3s infinite;
+        }
+        
+        @keyframes chaos-glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(3px, -3px); }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .greyface-meter {
+            height: 12px;
+            background: linear-gradient(90deg, #0f0, #ff0, #f00);
+            transition: width 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        /* extra tiny-phone tweaks */
+        @media (max-width: 380px) {
+            .terminal { border-width: 5px; padding: 1rem; }
+            .stamp { font-size: 1.4rem; }
+            button { padding: 1rem 0; font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body class="bg-[#111] p-3 overflow-y-auto">
+    <div class="terminal w-full max-w-md mx-auto relative">
+        <!-- HEADER STAMP -->
+        <div class="stamp top-3 left-3">OFFICIAL</div>
+        <div class="stamp top-3 right-3 rotate-12">DISCORDIAN</div>
+        
+        <div class="flex justify-between items-center mb-6 border-b border-[#0f0] pb-4">
+            <div>
+                <h1 class="text-5xl tracking-widest text-[#0f0]">POPE.EXE</h1>
+                <p class="text-[#0f0]/70 text-lg -mt-2">v23.5 • ERIS APPROVED • 0000001</p>
+            </div>
+            <div onclick="hailEris()" class="text-5xl cursor-pointer hover:scale-125 transition active:scale-110">🍎</div>
+        </div>
+
+        <div id="ordination" class="mb-6 text-center">
+            <div class="mb-3 text-[#ff0] text-2xl">YOU HAVE BEEN INSTANTLY ORDAINED</div>
+            <div id="pope-name" class="text-4xl font-bold text-white mb-1">Pope Cardinal Squelch IX</div>
+            <div id="pope-title" class="text-[#0f0]/80 text-xl">of the Fifth Snack &amp; All Unfiled Paperwork</div>
+        </div>
+
+        <!-- GREYFACE METER -->
+        <div class="mb-6">
+            <div class="flex justify-between text-xs mb-1 text-[#0f0]/60">
+                <span>GREYFACE COMPLIANCE LEVEL</span>
+                <span id="meter-text">23%</span>
+            </div>
+            <div class="bg-[#001100] border border-[#0f0] p-1">
+                <div id="greyface-meter" class="greyface-meter w-[23%]"></div>
+            </div>
+            <div onclick="checkGreyface()" class="text-[#f00] text-xs mt-1 cursor-pointer hover:text-[#ff0]">
+                → CLICK TO INCREASE ORDER (DANGER)
+            </div>
+        </div>
+
+        <!-- BUTTONS (stacked, smaller on tiny phones) -->
+        <div class="grid grid-cols-1 gap-3 mb-6">
+            <button onclick="newTitle()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                NEW SACRED TITLE
+            </button>
+            <button onclick="newDoctrine()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                ISSUE NEW DOCTRINE
+            </button>
+            <button onclick="causeSchism()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                CAUSE A SCHISM
+            </button>
+            <button onclick="newMission()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                ASSIGN IMPOSSIBLE MISSION
+            </button>
+            <button onclick="revealHiddenTruth()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                REVEAL HIDDEN TRUTH
+            </button>
+            <button onclick="dropGoldenApple()" 
+                    class="w-full bg-[#001100] border-2 border-[#0f0] hover:border-[#ff0] text-[#0f0] py-4 text-2xl transition-all active:scale-95">
+                DROP GOLDEN APPLE
+            </button>
+        </div>
+
+        <!-- OUTPUT -->
+        <div id="output" class="min-h-[140px] bg-black/70 border border-[#0f0]/50 p-5 text-[#0f0] text-xl leading-tight overflow-auto mb-6">
+            Welcome, new Pope.<br>
+            You are already a pope. Everyone is.<br>
+            This is not a bug. This is the feature.
+        </div>
+
+        <!-- SACRED CHAO -->
+        <div onclick="consultSacredChao()" 
+             class="mx-auto w-32 h-32 border-4 border-[#0f0] rounded-full flex items-center justify-center text-6xl cursor-pointer hover:rotate-12 transition hover:border-[#ff0] relative mb-8">
+            <span class="absolute text-[#ff0]">🍎</span>
+            <span class="absolute text-[#0f0] text-5xl rotate-180">⬠</span>
+            <div class="text-[#ff0] text-xs absolute -bottom-6 tracking-widest">SACRED CHAO</div>
+        </div>
+
+        <div class="text-center pb-6 text-[#0f0]/30 text-xs">
+            All Hail Eris • All Hail Discordia • 
+            <span onclick="fnord()" class="cursor-pointer hover:text-[#f00]">fnord</span>
+        </div>
+    </div>
+
+    <!-- FLOATING APPLES -->
+    <div id="apple-container"></div>
+
+    <script>
+        // ──────────────────────────────────────────────────────────────
+        // ALL THE DISCORDIAN CHAOS LOGIC (unchanged)
+        // ──────────────────────────────────────────────────────────────
+        const popePrefixes = ["Pope", "Pope Cardinal", "His Most Illustrious Holiness", "Grand High Pope", "Reverend Pope", "Saint Pope", "Discordian Pope", "Exalted Pope", "Pope Emeritus", "Pope of the Unholy"];
+        const popeNames = ["Squelch", "Fnord", "Malaclypse", "Eris", "Zorba", "Bungle", "Kallisti", "Cthulhu", "Greyface", "Wobbly", "Snark", "Boing", "Discord", "Pineapple", "23", "666", "Hail", "Chaos", "Chao", "Apple"];
+        const popeSuffixes = ["IX", "XIV", "XXIII", "the Unordained", "of the Fifth Snack", "of All Unfiled Paperwork", "of Tuesday", "the Magnificent", "the Ridiculous", "the Forgotten", "the Invisible", "the Extremely Online"];
+        
+        const doctrines = ["Tuesdays are octagonal. This is not optional.","All statements are true in some sense, false in some sense, meaningless in some sense.","The Curse of Greyface is hereby repealed every other Thursday.","You are required to believe nothing. Especially this.","The sacred number is 23. Also 5. Also whatever you feel like.","Order is a hallucination caused by lack of apples.","Every government is a conspiracy of Greyfaces against fun.","There are no rules. Rule 1: See rule 0.","The Pentabarf is binding except when it isn't.","Reality is a shared hallucination. You are hallucinating right now."];
+        
+        const missions = ["Misfile one cosmic form today.","Convert exactly one Greyface (they will deny it happened).","Hide 23 golden apples in places of order.","Declare next Tuesday a national holiday of chaos.","Replace all 'Do Not Disturb' signs with 'Please Disturb'.","Convince your boss that bureaucracy is a joke religion.","Spread the word that every person is already a pope (they won't believe you).","Perform one act of creative nonsense before lunch.","Rename your WiFi to 'Operation Mindfuck'.","Laugh at the concept of deadlines."];
+        
+        let greyfaceLevel = 23;
+
+        function random(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function updatePopeName() {
+            const name = `${random(popePrefixes)} ${random(popeNames)} ${random(popeSuffixes)}`;
+            document.getElementById('pope-name').textContent = name;
+            return name;
+        }
+
+        function newTitle() { updatePopeName(); addOutput(`<span class="text-[#ff0]">NEW TITLE ISSUED:</span><br>${document.getElementById('pope-name').textContent}`); increaseGreyface(8); maybeChaos(); }
+        function newDoctrine() { const doc = random(doctrines); addOutput(`<span class="text-[#ff0]">OFFICIAL DOCTRINE #${Math.floor(Math.random()*900)+100}:</span><br>“${doc}”`); increaseGreyface(12); maybeChaos(); }
+        function newMission() { const mission = random(missions); addOutput(`<span class="text-[#ff0]">YOUR SACRED MISSION:</span><br>${mission}`); increaseGreyface(6); maybeChaos(); }
+        function causeSchism() { const rival = `${random(popePrefixes)} ${random(popeNames)} ${random(popeSuffixes)}`; addOutput(`<span class="text-[#f00]">SCHISM CREATED!</span><br>New rival sect founded by ${rival}.<br>Their doctrine: “Your doctrine is wrong and also boring.”`); increaseGreyface(15); maybeChaos(); }
+        function revealHiddenTruth() { const truths = ["Order is good.", "Chaos is bad.", "Both of the above are lies.", "This sentence is false.", "You already knew this."]; addOutput(`<span class="text-[#ff0]">HIDDEN TRUTH REVEALED:</span><br>${random(truths)}<br><span class="text-[#0f0]/60">…and its opposite is also true.</span>`); increaseGreyface(10); maybeChaos(); }
+        function dropGoldenApple() { addOutput(`<span class="text-[#ff0]">A GOLDEN APPLE HAS BEEN ISSUED TO YOUR DEPARTMENT.</span><br>Click the floating apples.`); createFloatingApple(); maybeChaos(); }
+        function consultSacredChao() { const o = random(doctrines), d = random(doctrines); addOutput(`<span class="text-[#ff0]">SACRED CHAO SPEAKS:</span><br>ORDER: “${o}”<br>DISORDER: “${d}”<br><span class="text-[#0f0]/60">Both are meaningless. Hail Eris.</span>`); createFloatingApple(); }
+        function checkGreyface() { increaseGreyface(25); addOutput(`<span class="text-[#f00]">GREYFACE COMPLIANCE INCREASED.</span><br>You feel slightly more boring.`); if (greyfaceLevel > 85) triggerFullChaos(); }
+        function increaseGreyface(amount) { greyfaceLevel = Math.min(100, greyfaceLevel + amount); document.getElementById('greyface-meter').style.width = greyfaceLevel + '%'; document.getElementById('meter-text').textContent = greyfaceLevel + '%'; }
+
+        function addOutput(html) {
+            const out = document.getElementById('output');
+            out.innerHTML = html + '<br><br>' + out.innerHTML;
+        }
+
+        function createFloatingApple() {
+            const a = document.createElement('div');
+            a.textContent = '🍎';
+            a.className = 'apple';
+            a.style.left = Math.random() * 90 + 'vw';
+            a.style.top = (Math.random() * 40 - 10) + 'vh';
+            a.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            a.onclick = () => { addOutput('🍎 <span class="text-[#ff0]">SECRET REVEALED:</span> You are already a pope. Again.'); a.remove(); };
+            document.getElementById('apple-container').appendChild(a);
+            setTimeout(() => a.parentNode && a.remove(), 8000);
+        }
+
+        function maybeChaos() {
+            if (Math.random() < 0.3) {
+                document.querySelector('.terminal').classList.add('chaos');
+                setTimeout(() => document.querySelector('.terminal').classList.remove('chaos'), 800);
+                const btns = document.querySelectorAll('button');
+                const b = btns[Math.floor(Math.random()*btns.length)];
+                const old = b.textContent;
+                b.textContent = 'ERIS WAS HERE';
+                setTimeout(() => b.textContent = old, 1200);
+            }
+        }
+
+        function triggerFullChaos() {
+            addOutput('<span class="text-[#f00] text-3xl">WARNING: GREYFACE OVERLOAD</span><br>Eris has entered the chat.');
+            document.body.style.background = '#300';
+            document.querySelector('.terminal').style.borderColor = '#f00';
+            setTimeout(() => {
+                greyfaceLevel = 5;
+                document.getElementById('greyface-meter').style.width = '5%';
+                document.getElementById('meter-text').textContent = '5%';
+                document.body.style.background = '#111';
+                document.querySelector('.terminal').style.borderColor = '#0f0';
+                addOutput('The Curse of Greyface has been temporarily lifted. You may now resume being ridiculous.');
+            }, 4200);
+        }
+
+        function hailEris() {
+            const msgs = ["HAIL ERIS!", "ALL HAIL DISCORDIA!", "KALLISTI!", "23!", "fnord"];
+            addOutput(`<span class="text-[#ff0] text-4xl">${random(msgs)}</span>`);
+            for (let i = 0; i < 5; i++) setTimeout(createFloatingApple, i * 100);
+        }
+
+        function fnord() {
+            addOutput('FNORD<br>The word you just read is meaningless and you are now thinking about it.');
+        }
+
+        function boot() {
+            document.getElementById('pope-name').textContent = "Pope Cardinal Squelch IX";
+            document.getElementById('output').innerHTML = `<span class="text-[#ff0]">POPE.EXE INITIALIZED</span><br>You are already a pope.<br>This website has no authority.<br>Neither does anything else.<br><span class="text-[#0f0]/60">— Principia Discordia, Page 00001</span>`;
+            for (let i = 0; i < 3; i++) setTimeout(createFloatingApple, i * 400);
+            setInterval(() => { if (Math.random() < 0.15) maybeChaos(); }, 7000);
+        }
+
+        window.onload = boot;
+    </script>
+</body>
+</html>
