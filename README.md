@@ -1,5 +1,14 @@
 # POPE.EXE
 
+<!-- splarg-storefront:start -->
+<p align="center">
+  <strong><a href="https://splarg.itch.io/pope-exe">▶ Play in browser on itch.io</a></strong>
+</p>
+<p align="center">
+  <a href="https://splarg.itch.io/pope-exe">Screenshots & current public release</a> · <a href="https://splarg.com/">splarg.com</a>
+</p>
+<!-- splarg-storefront:end -->
+
 **Official Discordian Ordination Terminal v23.5**
 
 POPE.EXE is a small interactive browser toy inspired by Discordianism. On arrival you are immediately ordained and given an appropriately improbable papal identity; from there the terminal generates doctrines, missions, schisms and other bureaucratic acts of sacred nonsense.
