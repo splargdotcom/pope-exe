@@ -9,6 +9,13 @@
 </p>
 <!-- splarg-storefront:end -->
 
+<!-- splarg-itch-media:start -->
+<p align="center">
+  <a href="https://splarg.itch.io/pope-exe"><img src="docs/itch/cover.jpg" alt="POPE.EXE cover art" width="640"></a>
+</p>
+<!-- splarg-itch-media:end -->
+
+
 
 **Official Discordian Ordination Terminal v23.5**
 
